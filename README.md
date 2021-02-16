@@ -12,4 +12,4 @@ fyne install -icon ./assets/icon.png
 ~~~
 
 ## Contact and contribution
-If you'd like to contribute in any way, feel free to! Also if you have and question hit me up anywhere, i will respond as fast as i can.
+If you'd like to contribute in any way, feel free to! There are probably a lot of usefull features and fixes to add. Also if you have and question hit me up anywhere, i will respond as fast as i can.

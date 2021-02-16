@@ -17,7 +17,7 @@ import (
 
 func main() {
 	a := app.New()
-	a.SetIcon(theme.FyneLogo())
+	a.SetIcon(resourceIconPng)
 	a.Settings().SetTheme(theme.DarkTheme())
 	a.Settings().Theme().Font(fyne.TextStyle{Bold: true})
 	w := a.NewWindow("RGB to Hex")
@@ -38,7 +38,6 @@ func main() {
 	footer := widget.NewLabel("Made By Sobek")
 
 	hex := widget.NewEntry()
-	hex.SetPlaceHolder("#000000")
 	hex.TextStyle = fyne.TextStyle{Bold: true}
 
 	rgb := container.NewVBox(inputR, inputG, inputB, widget.NewButton("Convert", func() {

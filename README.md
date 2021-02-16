@@ -3,7 +3,9 @@ RGB to Hex is a simple little program made with Go. The GUI is made with Fyne.io
 
 ## How to use?
 Simply take out the shortcut file in the main directory wherever you want and use it! If you'd like to change something run
-~~~go build -ldflags="-H windowsgui" -o ./cmd/hex-to-rgb.exe~~~.
+~~~
+go build -ldflags="-H windowsgui" -o ./cmd/hex-to-rgb.exe
+~~~
 
 ## Contact and contribution
 If you'd like to contribute in any way, feel free to! Also if you have and question hit me up anywhere, i will respond as fast as i can.

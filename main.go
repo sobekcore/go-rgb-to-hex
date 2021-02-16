@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
+	"image/color"
 	"strconv"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/data/validation"
 	"fyne.io/fyne/v2/layout"
@@ -20,9 +22,10 @@ func main() {
 	a.Settings().Theme().Font(fyne.TextStyle{Bold: true})
 	w := a.NewWindow("RGB to Hex")
 	w.SetPadded(true)
-	w.Resize(fyne.NewSize(280, 380))
+	w.Resize(fyne.NewSize(250, 280))
+	w.SetFixedSize(true)
 
-	var filter string = `^([0-9]{1,2}|2[0-4][0-9]|25[0-5])\b+$`
+	var filter string = `^(1?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\b+$`
 
 	inputR := &widget.Entry{Validator: validation.NewRegexp(filter, "Must contain a number!")}
 	inputR.SetPlaceHolder("Red (0-255)")
@@ -35,7 +38,7 @@ func main() {
 	footer := widget.NewLabel("Made By Sobek")
 
 	hex := widget.NewEntry()
-	hex.SetPlaceHolder("#FFFFFF")
+	hex.SetPlaceHolder("#000000")
 	hex.TextStyle = fyne.TextStyle{Bold: true}
 
 	rgb := container.NewVBox(inputR, inputG, inputB, widget.NewButton("Convert", func() {
@@ -51,14 +54,32 @@ func main() {
 		r, g, b := c1, c2, c3
 		var str = fmt.Sprintf("#%02X%02X%02X", r, g, b)
 		hex.SetText(str)
+
+		line := &canvas.Rectangle{StrokeColor: color.NRGBA{uint8(r), uint8(g), uint8(b), 255}, StrokeWidth: 4}
+		canvas.Refresh(line)
+
+		contentFinal := fyne.NewContainerWithLayout(
+			layout.NewVBoxLayout(),
+			fyne.NewContainerWithLayout(layout.NewCenterLayout(), title),
+			layout.NewSpacer(),
+			widget.NewButtonWithIcon("Copy to clipboard", theme.ContentCopyIcon(), func() {
+				w.Clipboard().SetContent(str)
+				w.Close()
+			}),
+			fyne.NewContainerWithLayout(layout.NewVBoxLayout(), hex),
+			fyne.NewContainerWithLayout(layout.NewVBoxLayout(), line),
+			layout.NewSpacer(),
+			fyne.NewContainerWithLayout(layout.NewCenterLayout(), footer),
+		)
+
+		w.SetContent(contentFinal)
 	}))
 
 	content := fyne.NewContainerWithLayout(
 		layout.NewVBoxLayout(),
 		fyne.NewContainerWithLayout(layout.NewCenterLayout(), title),
-		fyne.NewContainerWithLayout(layout.NewVBoxLayout(), rgb),
 		layout.NewSpacer(),
-		fyne.NewContainerWithLayout(layout.NewVBoxLayout(), hex),
+		fyne.NewContainerWithLayout(layout.NewVBoxLayout(), rgb),
 		layout.NewSpacer(),
 		fyne.NewContainerWithLayout(layout.NewCenterLayout(), footer),
 	)
@@ -67,39 +88,3 @@ func main() {
 	w.CenterOnScreen()
 	w.ShowAndRun()
 }
-
-/*
-Fyne App layout
-package main
-
-import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/widget"
-)
-
-func main() {
-	f := app.New()
-	w := f.NewWindow("Fyne Testing")
-	w.Resize(fyne.NewSize(320, 480))
-
-	title := widget.NewLabel("Title")
-	middle := widget.NewLabel("Middle")
-	title.Alignment = fyne.TextAlignTrailing
-	title.TextStyle = fyne.TextStyle{Italic: true}
-	footer := widget.NewLabel("Footer")
-
-	content :=
-		fyne.NewContainerWithLayout(
-			fyne.NewContainerWithLayout(layout.NewHBoxLayout(), layout.NewSpacer(), title, layout.NewSpacer()),
-			layout.NewSpacer(),
-			fyne.NewContainerWithLayout(layout.NewHBoxLayout(), layout.NewSpacer(), middle, layout.NewSpacer()),
-			layout.NewSpacer(),
-			fyne.NewContainerWithLayout(layout.NewHBoxLayout(), layout.NewSpacer(), footer, layout.NewSpacer()),
-		)
-
-	w.SetContent(content)
-	w.ShowAndRun()
-}
-*/

@@ -22,11 +22,12 @@ func main() {
 	a.Settings().SetTheme(theme.DarkTheme())
 	a.Settings().Theme().Font(fyne.TextStyle{Bold: true})
 	w := a.NewWindow("RGB to Hex")
-	w.SetPadded(true)
 	w.Resize(fyne.NewSize(250, 280))
 	w.SetFixedSize(true)
+	w.SetPadded(true)
 
-	var filter string = `^(1?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\b+$`
+	// Regex Validation for numbers from 0-255
+	filter := `^(1?[0-9]{1,2}|2[0-4][0-9]|25[0-5])\b+$`
 
 	inputR := &widget.Entry{Validator: validation.NewRegexp(filter, "Must contain a number!")}
 	inputR.SetPlaceHolder("Red (0-255)")
@@ -35,11 +36,12 @@ func main() {
 	inputB := &widget.Entry{Validator: validation.NewRegexp(filter, "Must contain a number!")}
 	inputB.SetPlaceHolder("Blue (0-255)")
 
+	// Regex Validation for codes from #000000 to #FFFFFF
 	inputHex := &widget.Entry{Validator: validation.NewRegexp(`^#(?:[0-9a-fA-F]{6})$`, "Must be Hex!")}
 	inputHex.SetPlaceHolder("#000000")
 
 	title := widget.NewLabel("RGB to Hex")
-	titleAlt := widget.NewLabel("Hex to RGB                     ") // White-space (21 spaces) to create title offset
+	titleAlt := widget.NewLabel("Hex to RGB")
 	footer := widget.NewLabel("Made By Sobek")
 	footerInfo := widget.NewButtonWithIcon("", theme.InfoIcon(), func() {
 		dialog.ShowInformation("About", "RGB to Hex is a simple app\n to convert your given color\n between RGB and Hex. It's core\n is made with Go, and the\n GUI is made with Fyne.io.\n\nAuthor: Sobek", w)
@@ -142,10 +144,14 @@ func main() {
 		w.SetContent(contentFinal)
 	}))
 
+	changeHexDisabled := widget.NewButtonWithIcon("Hex", theme.ColorPaletteIcon(), func() {})
+	changeHexDisabled.Disable()
+
 	// Hex to RGB page render
 	contentHex := fyne.NewContainerWithLayout(
 		layout.NewVBoxLayout(),
-		fyne.NewContainerWithLayout(layout.NewCenterLayout(), titleAlt),
+		fyne.NewContainerWithLayout(layout.NewHBoxLayout(), layout.NewSpacer(),
+			titleAlt, layout.NewSpacer(), changeHexDisabled),
 		layout.NewSpacer(),
 		fyne.NewContainerWithLayout(layout.NewVBoxLayout(), hexFields),
 		layout.NewSpacer(),

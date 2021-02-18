@@ -1,4 +1,4 @@
-# RGB to Hex
+## RGB to Hex
 RGB to Hex is a simple little program made with Go. The GUI is made with Fyne.io. The program takes 3 values from user (red, green, blue) and turns it into hex color value. It was created for easier front-end development without need to google it all the time. Super lightweight and small.
 
 ## How to run?
